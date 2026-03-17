@@ -1,0 +1,183 @@
+{
+  "viraj": [],
+  "virajratnakar@gmail.com": [],
+  "yoyo": [
+    {
+      "id": "chat-1763988378076-zmej2",
+      "name": "Untitled chat",
+      "style": "normal",
+      "messages": [
+        {
+          "id": "msg-1763988379717-bpsqy",
+          "sender": "You",
+          "text": "hey"
+        },
+        {
+          "id": "msg-1763988379717-2o86e",
+          "sender": "AI",
+          "text": "Hello. How can I assist you today?",
+          "pending": false
+        },
+        {
+          "id": "msg-1763988382844-ptwpg",
+          "sender": "You",
+          "text": "idk"
+        },
+        {
+          "id": "msg-1763988382844-zxrzf",
+          "sender": "AI",
+          "text": "AI: That's okay. Is there anything specific you would like to talk about or ask?",
+          "pending": false
+        },
+        {
+          "id": "msg-1763988386993-y2x4d",
+          "sender": "You",
+          "text": "bye"
+        },
+        {
+          "id": "msg-1763988386993-faa88",
+          "sender": "AI",
+          "text": "AI: Goodbye. Have a great day.",
+          "pending": false
+        }
+      ]
+    }
+  ],
+  "virajt": [
+    {
+      "id": "chat-1763989853419-3nxth",
+      "name": "Untitled chat",
+      "style": "normal",
+      "messages": [
+        {
+          "id": "msg-1763989855013-uttos",
+          "sender": "You",
+          "text": "hey"
+        },
+        {
+          "id": "msg-1763989855013-p4hce",
+          "sender": "AI",
+          "text": "Hello. How can I assist you today?",
+          "pending": false
+        },
+        {
+          "id": "msg-1763989859807-6cyux",
+          "sender": "You",
+          "text": "what up"
+        },
+        {
+          "id": "msg-1763989859807-ip5u7",
+          "sender": "AI",
+          "text": "AI: Not much, just here to help. How can I assist you today?",
+          "pending": false
+        }
+      ]
+    }
+  ],
+  "virajty": [
+    {
+      "id": "chat-1763990199237-pcdpq",
+      "name": "Untitled chat",
+      "style": "normal",
+      "messages": [
+        {
+          "id": "msg-1763990200827-vrul7",
+          "sender": "You",
+          "text": "hey"
+        },
+        {
+          "id": "msg-1763990200827-yw0fh",
+          "sender": "AI",
+          "text": "Hello. How can I assist you today?",
+          "pending": false
+        },
+        {
+          "id": "msg-1763990202115-vb7u8",
+          "sender": "You",
+          "text": "hey"
+        },
+        {
+          "id": "msg-1763990202115-ibm6p",
+          "sender": "AI",
+          "text": "Hello. How can I assist you today?",
+          "pending": false
+        },
+        {
+          "id": "msg-1763990203585-5w2o3",
+          "sender": "You",
+          "text": "hey"
+        },
+        {
+          "id": "msg-1763990203585-cytfc",
+          "sender": "AI",
+          "text": "AI: Hello. How can I assist you today?",
+          "pending": false
+        },
+        {
+          "id": "msg-1763990205053-pwzvj",
+          "sender": "You",
+          "text": "hey"
+        },
+        {
+          "id": "msg-1763990205054-c9k8s",
+          "sender": "AI",
+          "text": "Hello. How can I assist you today?",
+          "pending": false
+        },
+        {
+          "id": "msg-1763990206517-v5d2y",
+          "sender": "You",
+          "text": "hey"
+        },
+        {
+          "id": "msg-1763990206517-a3mxp",
+          "sender": "AI",
+          "text": "Hello. How can I assist you today?",
+          "pending": false
+        },
+        {
+          "id": "msg-1763990207895-u080g",
+          "sender": "You",
+          "text": "hey"
+        },
+        {
+          "id": "msg-1763990207895-fpdru",
+          "sender": "AI",
+          "text": "Hello, how can I help you today?",
+          "pending": false
+        }
+      ]
+    }
+  ],
+  "w": [
+    {
+      "id": "chat-1763991450782-f5zfm",
+      "name": "Untitled chat",
+      "style": "normal",
+      "messages": [
+        {
+          "id": "msg-1763991452325-0mqlp",
+          "sender": "You",
+          "text": "hey"
+        },
+        {
+          "id": "msg-1763991452325-3p033",
+          "sender": "AI",
+          "text": "Hello. How can I assist you today?",
+          "pending": false
+        },
+        {
+          "id": "msg-1763991453694-du1qw",
+          "sender": "You",
+          "text": "hey"
+        },
+        {
+          "id": "msg-1763991453694-utm2a",
+          "sender": "AI",
+          "text": "Hello. How can I assist you today?",
+          "pending": false
+        }
+      ]
+    }
+  ]
+}
