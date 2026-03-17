@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Viraj's AI</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: radial-gradient(circle at top, #1d2b64 0%, #1c1c1c 55%, #0f2027 100%);
+      --card: rgba(255, 255, 255, 0.08);
+      --border: rgba(255, 255, 255, 0.12);
+      --accent: linear-gradient(135deg, #00d2ff, #3a7bd5);
+      --accent-2: linear-gradient(135deg, #6c63ff, #00b4ff);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Poppins", "Segoe UI", sans-serif;
+      min-height: 100vh;
+      background: var(--bg);
+      color: #f8fafc;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: clamp(12px, 2vw, 32px);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    #userGate {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 10, 20, 0.94);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 32px;
+      text-align: center;
+      z-index: 5;
+    }
+
+    #userGate form {
+      width: min(420px, 90vw);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.55);
+    }
+
+    #userGate h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #f8fafc;
+    }
+
+    #userGate input {
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      font-size: 1rem;
+    }
+
+    #userGate button {
+      border-radius: 12px;
+      border: none;
+      padding: 12px 16px;
+      font-size: 1rem;
+      font-weight: 600;
+      background: var(--accent);
+      color: white;
+      cursor: pointer;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 1200px;
+      min-height: 80vh;
+      background: rgba(10, 16, 32, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 28px;
+      display: flex;
+      gap: 0;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+    }
+
+    .app-shell.locked {
+      filter: blur(5px);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    aside {
+      width: 320px;
+      min-width: 280px;
+      background: rgba(13, 25, 46, 0.9);
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .user-badge {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-badge strong {
+      font-size: 1rem;
+    }
+
+    .user-label {
+      font-size: 0.8rem;
+      opacity: 0.7;
+      display: block;
+    }
+
+    #changeUserBtn {
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: transparent;
+      color: #e2e8f0;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      letter-spacing: 0.5px;
+      text-align: left;
+      color: #e2e8f0;
+    }
+
+    .new-chat-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 18px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .new-chat-card label {
+      text-align: left;
+      font-size: 0.85rem;
+      opacity: 0.85;
+    }
+
+    .new-chat-card input,
+    .new-chat-card select {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 10px 12px;
+      background: rgba(0, 0, 0, 0.25);
+      color: #f8fafc;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .new-chat-card button {
+      border-radius: 14px;
+      padding: 12px;
+      font-weight: 600;
+      background: var(--accent-2);
+      border: none;
+      cursor: pointer;
+      color: white;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .new-chat-card button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 15px 30px rgba(108, 99, 255, 0.35);
+    }
+
+    #chatList {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .chat-list-item {
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+      transition: border-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .chat-list-item.active {
+      border-color: #00d2ff;
+      transform: translateX(4px);
+      background: rgba(0, 210, 255, 0.08);
+    }
+
+    .chat-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .chat-meta h3 {
+      margin: 0;
+      font-size: 1rem;
+      color: #f8fafc;
+    }
+
+    .chat-style-tag {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      opacity: 0.8;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: stretch;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    #emptyState {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px;
+      text-align: center;
+      gap: 14px;
+      color: rgba(248, 250, 252, 0.8);
+    }
+
+    #activeChat {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 28px;
+      gap: 16px;
+    }
+
+    #activeChat.hidden {
+      display: none;
+    }
+
+    #chatHeader {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    #chatHeader h2 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+
+    #renameChatBtn {
+      margin-top: 6px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 6px 10px;
+      background: transparent;
+      color: #e2e8f0;
+      cursor: pointer;
+    }
+
+    .style-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+
+    .style-control select {
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #f8fafc;
+    }
+
+    #chat {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      padding: 18px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 0;
+      scrollbar-width: thin;
+      scrollbar-color: #00d2ff rgba(255, 255, 255, 0.1);
+    }
+
+    #chat::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    #chat::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #00d2ff, #3a7bd5);
+      border-radius: 8px;
+    }
+
+    .message {
+      max-width: 78%;
+      padding: 12px 16px;
+      border-radius: 18px;
+      line-height: 1.45;
+      font-size: 0.97rem;
+      position: relative;
+      animation: slideIn 0.35s ease;
+    }
+
+    .message.user {
+      margin-left: auto;
+      background: linear-gradient(135deg, #0078ff, #00d4ff);
+      color: white;
+      border-bottom-right-radius: 6px;
+      box-shadow: 0 10px 20px rgba(0, 122, 255, 0.35);
+    }
+
+    .message.ai {
+      margin-right: auto;
+      background: linear-gradient(135deg, #00ff88, #00d2ff);
+      border-bottom-left-radius: 6px;
+      color: white;
+      box-shadow: 0 10px 20px rgba(0, 255, 136, 0.28);
+    }
+
+    .message.pending {
+      opacity: 0.7;
+      font-style: italic;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    #chatfull {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      padding-top: 8px;
+    }
+
+    #input {
+      flex: 1;
+      min-width: 200px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.08);
+      padding: 14px 16px;
+      color: #f8fafc;
+      font-size: 1rem;
+    }
+
+    #input:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    #sendBtn {
+      padding: 14px 20px;
+      border-radius: 14px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      min-width: 110px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    #sendBtn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 15px 30px rgba(0, 210, 255, 0.35);
+    }
+
+    #sendBtn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 960px) {
+      .app-shell {
+        flex-direction: column;
+      }
+
+      aside {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      main {
+        min-height: 60vh;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="userGate">
+    <form id="userForm">
+      <h2 id="formTitle">Login</h2>
+      <p id="formSubtitle" style="margin:0;opacity:0.75;">Enter your username and password</p>
+      <input id="usernameInput" placeholder="Username" autocomplete="username" type="text">
+      <input id="passwordInput" placeholder="Password" autocomplete="current-password" type="password">
+      <input id="promoInput" placeholder="Promo code (optional)" type="text">
+      <button type="button" id="promoBtn" style="background:#6c63ff;border:none;">
+        Redeem Promo
+      </button>
+      <div id="errorMsg" style="color:#ff6b6b;font-size:0.9rem;display:none;text-align:left;"></div>
+      <button type="submit" id="submitBtn">Login</button>
+      <div id="g_id_onload" data-client_id="955861463707-uukaklt3p9b7ps4b4vqvnj0a2nnbk7ll.apps.googleusercontent.com"
+        data-callback="handleGoogleResponse">
+      </div>
+
+      <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="continue_with"
+        data-shape="rectangular">
+      </div>
+      <button type="button" id="toggleModeBtn"
+        style="background:transparent;border:1px solid rgba(255,255,255,0.2);margin-top:8px;">
+        Don't have an account? Register
+      </button>
+    </form>
+  </div>
+  <div class="app-shell locked" id="appShell">
+    <aside>
+      <h1>Viraj's AI</h1>
+      <div class="user-badge">
+        <div>
+          <span class="user-label">Signed in as</span>
+          <strong id="currentUserLabel">Guest</strong>
+        </div>
+        <button id="changeUserBtn" type="button">Switch</button>
+      </div>
+      <div class="new-chat-card">
+        <label for="chatName">Conversation name</label>
+        <input id="chatName" placeholder="e.g. Homework helper">
+        <label for="chatStyle">Reply style</label>
+        <select id="chatStyle">
+          <option value="formal">Formal</option>
+          <option value="normal" selected>Normal</option>
+          <option value="informal">Informal</option>
+        </select>
+        <button id="createChatBtn">+ New chat</button>
+      </div>
+      <ul id="chatList"></ul>
+    </aside>
+
+    <main>
+      <section id="emptyState">
+        <h2>Start chatting ✨</h2>
+        <p>Create a conversation on the left to begin.</p>
+      </section>
+
+      <section id="activeChat" class="hidden">
+        <header id="chatHeader">
+          <div>
+            <h2 id="activeChatName"></h2>
+            <button id="renameChatBtn">Rename</button>
+            <button id="deleteChatBtn" style="margin-left:8px;">Delete</button>
+          </div>
+          <div class="style-control">
+            <label for="activeStyleSelect">Style</label>
+            <select id="activeStyleSelect">
+              <option value="formal">Formal</option>
+              <option value="normal">Normal</option>
+              <option value="informal">Informal</option>
+            </select>
+          </div>
+        </header>
+
+        <div id="chat"></div>
+
+        <div id="chatfull">
+          <input id="input" placeholder="Type your message..." disabled>
+          <button id="sendBtn" disabled>Send</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const LIMITS = {
+      normal: 30,
+      google: 50,   // unlimited
+      pro: Infinity,
+      plus: 100
+    };
+    const userGate = document.getElementById("userGate");
+    const userForm = document.getElementById("userForm");
+    const usernameInput = document.getElementById("usernameInput");
+    const passwordInput = document.getElementById("passwordInput");
+    const errorMsg = document.getElementById("errorMsg");
+    const formTitle = document.getElementById("formTitle");
+    const formSubtitle = document.getElementById("formSubtitle");
+    const submitBtn = document.getElementById("submitBtn");
+    const toggleModeBtn = document.getElementById("toggleModeBtn");
+    const appShell = document.getElementById("appShell");
+
+    let isRegisterMode = false;
+    const chatList = document.getElementById("chatList");
+    const chatNameInput = document.getElementById("chatName");
+    const chatStyleSelect = document.getElementById("chatStyle");
+    const createChatBtn = document.getElementById("createChatBtn");
+    const emptyState = document.getElementById("emptyState");
+    const activeChatSection = document.getElementById("activeChat");
+    const activeChatName = document.getElementById("activeChatName");
+    const activeStyleSelect = document.getElementById("activeStyleSelect");
+    const chatContainer = document.getElementById("chat");
+    const messageInput = document.getElementById("input");
+    const sendBtn = document.getElementById("sendBtn");
+    const renameChatBtn = document.getElementById("renameChatBtn");
+
+    const currentUserLabel = document.getElementById("currentUserLabel");
+    const changeUserBtn = document.getElementById("changeUserBtn");
+
+    let chatSessions = [];
+    let currentChatId = null;
+    let currentUser = null;
+    them = null;
+    let isPro = false;
+    let isPlus = false;
+
+    const stylePrompts = {
+      formal: "formal and professional tone",
+      normal: "clear and neutral tone",
+      informal: "casual, friendly tone"
+    };
+    function applyPromoCode(code) {
+      if (code === "113411") {
+        them = "pro";
+        isPro = true
+        alert("Promo code applied! You now have unlimited credits Pro access.");
+      } else if (code === "155411") {
+        isPlus = true
+        alert("promo code aplied!you have gotten plus with 100 more credits than google users and 150 more than normal ones.");
+      }
+    }
+
+    function getUserLimit() {
+      if (isPlus === true) return LIMITS.plus;
+      if (isPro === true) return LIMITS.pro;
+      if (them === "google") return LIMITS.google;
+      return LIMITS.normal;
+    }
+
+
+    async function saveChats() {
+      if (!currentUser) return;
+      try {
+        await fetch(`/api/chats/${encodeURIComponent(currentUser)}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ chats: chatSessions })
+        });
+      } catch (err) {
+        console.error("Failed to save chats", err);
+      }
+    }
+
+    async function loadChatsForUser(user) {
+      try {
+        const res = await fetch(`/api/chats/${encodeURIComponent(user)}`);
+        if (!res.ok) throw new Error(`Load failed: ${res.status}`);
+        const data = await res.json();
+        chatSessions = Array.isArray(data.chats) ? data.chats : [];
+      } catch (err) {
+        console.error("Failed to load chats", err);
+        chatSessions = [];
+      }
+
+      if (chatSessions.length === 0) {
+        currentChatId = null;
+        chatContainer.innerHTML = "";
+        renderChatList();
+        showActiveChat(false);
+        return;
+      }
+
+      currentChatId = chatSessions[0]?.id || null;
+      renderChatList();
+      if (currentChatId) selectChat(currentChatId);
+    }
+    function deleteCurrentChat() {
+      if (!currentChatId) return;
+      if (!confirm("Are you sure you want to delete this chat?")) return;
+
+      chatSessions = chatSessions.filter(c => c.id !== currentChatId);
+      currentChatId = chatSessions[0]?.id || null;
+
+      saveChats();
+      renderChatList();
+
+      if (currentChatId) {
+        selectChat(currentChatId);
+      } else {
+        chatContainer.innerHTML = "";
+        showActiveChat(false);
+      }
+    }
+
+
+    async function unlockAppWithUser(user) {
+      currentUser = user.trim().toLowerCase();
+      currentUserLabel.textContent = user;
+      userGate.classList.add("hidden");
+      appShell.classList.remove("locked");
+      await loadChatsForUser(user);
+    }
+
+    function generateId(prefix = "chat") {
+      return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    }
+
+    function getCurrentChat() {
+      return chatSessions.find(chat => chat.id === currentChatId) || null;
+    }
+
+    function renderChatList() {
+      chatList.innerHTML = "";
+      if (chatSessions.length === 0) {
+        const hint = document.createElement("li");
+        hint.style.opacity = "0.7";
+        hint.textContent = "No conversations yet.";
+        chatList.appendChild(hint);
+        return;
+      }
+
+      chatSessions.forEach(chat => {
+        const li = document.createElement("li");
+        li.className = `chat-list-item${chat.id === currentChatId ? " active" : ""}`;
+        li.dataset.id = chat.id;
+        li.innerHTML = `
+          <div class="chat-meta">
+            <h3>${chat.name}</h3>
+            <span class="chat-style-tag">${chat.style}</span>
+          </div>
+          <small>${chat.messages.length} message${chat.messages.length === 1 ? "" : "s"}</small>
+        `;
+        li.onclick = () => selectChat(chat.id);
+        chatList.appendChild(li);
+      });
+    }
+
+    function showActiveChat(show) {
+      if (show) {
+        emptyState.style.display = "none";
+        activeChatSection.classList.remove("hidden");
+        messageInput.disabled = false;
+        sendBtn.disabled = false;
+      } else {
+        emptyState.style.display = "flex";
+        activeChatSection.classList.add("hidden");
+        messageInput.disabled = true;
+        sendBtn.disabled = true;
+      }
+    }
+
+    function selectChat(chatId) {
+      currentChatId = chatId;
+      const chat = getCurrentChat();
+      if (!chat) {
+        showActiveChat(false);
+        renderChatList();
+        return;
+      }
+
+      showActiveChat(true);
+      activeChatName.textContent = chat.name;
+      activeStyleSelect.value = chat.style;
+      renderChatList();
+      renderMessages(chat);
+      messageInput.focus();
+    }
+
+    function renderMessages(chat) {
+      chatContainer.innerHTML = "";
+      chat.messages.forEach(message => {
+        const div = document.createElement("div");
+        div.className = `message ${message.sender === "You" ? "user" : "ai"}${message.pending ? " pending" : ""}`;
+        div.textContent = message.text;
+        chatContainer.appendChild(div);
+      });
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function createChatSession() {
+      if (!currentUser) {
+        userGate.classList.remove("hidden");
+        appShell.classList.add("locked");
+        usernameInput.focus();
+        return;
+      }
+      const name = chatNameInput.value.trim() || "Untitled chat";
+      const style = chatStyleSelect.value;
+
+      const chat = {
+        id: generateId(),
+        name,
+        style,
+        messages: []
+      };
+
+      chatSessions.push(chat);
+      saveChats();
+      chatNameInput.value = "";
+      selectChat(chat.id);
+    }
+
+    function updateChatStyle(newStyle) {
+      const chat = getCurrentChat();
+      if (!chat) return;
+      chat.style = newStyle;
+      renderChatList();
+      saveChats();
+    }
+    async function sendMessage() {
+      const chat = getCurrentChat();
+      if (!chat) return;
+
+      const text = messageInput.value.trim();
+      if (!text) return;
+      // Limit user to 100 messages in a single chat
+      const limit = getUserLimit();
+      const userMessagesInChat = chat.messages.filter(m => m.sender === "You").length;
+
+      if (userMessagesInChat >= limit) {
+        alert(`You have reached your message limit (${limit === Infinity ? "Unlimited" : limit}).`);
+        return;
+      }
+
+      messageInput.value = "";
+
+      const userMessage = {
+        id: generateId("msg"),
+        sender: "You",
+        text
+      };
+
+      const pendingMessage = {
+        id: generateId("msg"),
+        sender: "AI",
+        text: "Typing...",
+        pending: true
+      };
+
+      chat.messages.push(userMessage, pendingMessage);
+      renderMessages(chat);
+      renderChatList();
+      saveChats();
+
+      // ------- FIXED CONTEXT --------
+      const history = chat.messages
+        .filter(m => !m.pending)
+        .map(m => `${m.sender}: ${m.text}`)
+        .join("\n");
+
+      const serverMsg = `
+Conversation history:
+${history}
+
+User: ${text}
+
+Instructions: Reply in a ${stylePrompts[chat.style]}.
+`;
+      // ----------------------------------
+
+      try {
+        const res = await fetch("/api/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question: serverMsg })
+        });
+
+        const data = await res.json();
+        pendingMessage.text = data?.reply?.trim() || "No response received.";
+
+      } catch (error) {
+        console.error(error);
+        pendingMessage.text = "Error connecting to server.";
+      } finally {
+        pendingMessage.pending = false;
+        renderMessages(chat);
+        renderChatList();
+        saveChats();
+      }
+    }
+
+    function renameCurrentChat() {
+      const chat = getCurrentChat();
+      if (!chat) return;
+      const newName = prompt("New chat name:", chat.name)?.trim();
+      if (!newName) return;
+      chat.name = newName;
+      activeChatName.textContent = chat.name;
+      renderChatList();
+      saveChats();
+    }
+
+    function showError(msg) {
+      errorMsg.textContent = msg;
+      errorMsg.style.display = "block";
+    }
+
+    function hideError() {
+      errorMsg.style.display = "none";
+    }
+
+    function toggleMode() {
+      isRegisterMode = !isRegisterMode;
+      if (isRegisterMode) {
+        formTitle.textContent = "Register";
+        formSubtitle.textContent = "Create a new account";
+        submitBtn.textContent = "Register";
+        toggleModeBtn.textContent = "Already have an account? Login";
+      } else {
+        formTitle.textContent = "Login";
+        formSubtitle.textContent = "Enter your username and password";
+        submitBtn.textContent = "Login";
+        toggleModeBtn.textContent = "Don't have an account? Register";
+      }
+      hideError();
+      usernameInput.value = "";
+      passwordInput.value = "";
+      usernameInput.focus();
+    }
+
+    async function handleUserSubmit(event) {
+      event.preventDefault();
+      hideError();
+
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+
+      if (!username || !password) {
+        showError("Please enter both username and password");
+        return;
+      }
+
+      if (password.length < 3) {
+        showError("Password must be at least 3 characters");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = isRegisterMode ? "Registering..." : "Logging in...";
+
+      try {
+        const endpoint = isRegisterMode ? "/api/auth/register" : "/api/auth/login";
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          showError(data.error || "Authentication failed");
+          submitBtn.disabled = false;
+          submitBtn.textContent = isRegisterMode ? "Register" : "Login";
+          return;
+        }
+
+        // Success - unlock the app
+        await unlockAppWithUser(username);
+        usernameInput.value = "";
+        passwordInput.value = "";
+        hideError();
+      } catch (err) {
+        console.error("Auth error:", err);
+        showError("Network error. Please try again.");
+        submitBtn.disabled = false;
+        submitBtn.textContent = isRegisterMode ? "Register" : "Login";
+      }
+    }
+
+    createChatBtn.addEventListener("click", createChatSession);
+    activeStyleSelect.addEventListener("change", (e) => updateChatStyle(e.target.value));
+    sendBtn.addEventListener("click", sendMessage);
+    messageInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+    renameChatBtn.addEventListener("click", renameCurrentChat);
+    userForm.addEventListener("submit", handleUserSubmit);
+    toggleModeBtn.addEventListener("click", toggleMode);
+    changeUserBtn.addEventListener("click", async () => {
+      await saveChats();
+      currentUser = null;
+      currentUserLabel.textContent = "Guest";
+      chatSessions = [];
+      currentChatId = null;
+      chatContainer.innerHTML = "";
+      renderChatList();
+      showActiveChat(false);
+      userGate.classList.remove("hidden");
+      appShell.classList.add("locked");
+      setTimeout(() => usernameInput.focus(), 100);
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Login";
+      isRegisterMode = false;
+      toggleMode();   // forces UI reset to login mode
+      hideError();
+    });
+    document.getElementById("promoBtn").addEventListener("click", () => {
+      const code = document.getElementById("promoInput").value.trim();
+      applyPromoCode(code);
+    });
+
+    window.addEventListener("load", () => {
+      isRegisterMode = false;
+      toggleMode(); // Reset to login mode
+      usernameInput.focus();
+    });
+    document.getElementById("deleteChatBtn").addEventListener("click", deleteCurrentChat);
+  </script>
+  <script>
+    async function handleGoogleResponse(response) {
+      them = "google";
+      const res = await fetch("/api/auth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ credential: response.credential })
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        await unlockAppWithUser(data.username); // You already have this
+      } else {
+        alert("Google login failed");
+      }
+    }
+  </script>
+</body>
+
+</html>
