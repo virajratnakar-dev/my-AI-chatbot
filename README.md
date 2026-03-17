@@ -1,6 +1,9 @@
 
 # 🤖 Viraj's AI Chat App
 
+access this website via this link:
+viraj-chatbot.fly.dev
+
 A modern, browser-based AI chat application with authentication, multi-chat support, customizable response styles, and usage tiers.
 
 ✨ Features
